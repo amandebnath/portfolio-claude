@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aman Debnath — Data Analyst</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --ink: #0e0d0b;
+        --paper: #f5f0e8;
+        --cream: #ede8dc;
+        --accent: #b85c2c;
+        --accent2: #2c5f8a;
+        --muted: #7a7468;
+        --rule: #c8c0b0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "DM Mono", monospace;
+        font-weight: 300;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* Custom cursor */
+      .cursor {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition:
+          transform 0.15s ease,
+          opacity 0.2s;
+        mix-blend-mode: multiply;
+      }
+      .cursor-ring {
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transition: transform 0.35s ease;
+        mix-blend-mode: multiply;
+      }
+
+      /* Noise texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 1000;
+        opacity: 0.5;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 20px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        mix-blend-mode: multiply;
+      }
+      .nav-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-left {
+        padding: 160px 48px 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: relative;
+      }
+      .hero-tag {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 24px;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.2s forwards;
+      }
+      .hero-name {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(3.5rem, 7vw, 6.5rem);
+        line-height: 0.95;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        opacity: 0;
+        animation: fadeUp 0.8s 0.4s forwards;
+      }
+      .hero-name em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero-desc {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: var(--muted);
+        max-width: 340px;
+        margin-top: 32px;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.6s forwards;
+      }
+      .hero-cta {
+        margin-top: 48px;
+        display: flex;
+        gap: 20px;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.8s forwards;
+      }
+      .btn {
+        font-family: "DM Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 14px 28px;
+        text-decoration: none;
+        border: 1px solid var(--ink);
+        color: var(--ink);
+        transition: all 0.25s;
+      }
+      .btn:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .btn-filled {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--paper);
+      }
+      .btn-filled:hover {
+        background: #9a4a22;
+        border-color: #9a4a22;
+        color: var(--paper);
+      }
+
+      .hero-right {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 160px 48px 80px 0;
+      }
+      .hero-graphic {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+      }
+      .hero-graphic .big-number {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(8rem, 18vw, 14rem);
+        font-weight: 700;
+        color: var(--cream);
+        line-height: 1;
+        position: absolute;
+        right: -20px;
+        top: -40px;
+        user-select: none;
+        opacity: 0;
+        animation: fadeIn 1.2s 0.5s forwards;
+      }
+      .hero-stats {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-top: 80px;
+        opacity: 0;
+        animation: fadeUp 0.8s 1s forwards;
+      }
+      .stat-row {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--rule);
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 2.4rem;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* Vertical scroll indicator */
+      .scroll-line {
+        position: absolute;
+        bottom: 40px;
+        left: 48px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        opacity: 0;
+        animation: fadeIn 1s 1.2s forwards;
+      }
+      .scroll-line::after {
+        content: "";
+        width: 48px;
+        height: 1px;
+        background: var(--muted);
+        display: block;
+      }
+
+      /* Diagonal decorative line */
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--rule) 30%,
+          var(--rule) 70%,
+          transparent
+        );
+      }
+
+      /* ── SECTION SHARED ── */
+      section {
+        position: relative;
+      }
+      .section-label {
+        font-size: 0.58rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        line-height: 1.1;
+        font-weight: 700;
+      }
+      hr.rule {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 20px 0;
+      }
+
+      /* ── ABOUT ── */
+      .about {
+        padding: 120px 48px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 80px;
+        align-items: start;
+      }
+      .about-left {
+        position: sticky;
+        top: 120px;
+      }
+      .about-right {
+      }
+      .about-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.35rem;
+        line-height: 1.75;
+        color: var(--ink);
+        margin-bottom: 32px;
+      }
+      .about-text strong {
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .skills-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-top: 40px;
+        border-top: 1px solid var(--rule);
+        border-left: 1px solid var(--rule);
+      }
+      .skill-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--rule);
+        border-right: 1px solid var(--rule);
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+      }
+      .skill-item .skill-cat {
+        color: var(--accent);
+        font-size: 0.55rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      /* ── EXPERIENCE ── */
+      .experience {
+        padding: 80px 48px 120px;
+        background: var(--cream);
+      }
+      .exp-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 60px;
+      }
+      .exp-entry {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 48px;
+        padding: 40px 0;
+        border-top: 1px solid var(--rule);
+      }
+      .exp-meta .company {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .exp-meta .period {
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+      .exp-meta .role {
+        font-size: 0.65rem;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        margin-top: 4px;
+      }
+      .exp-bullets {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .exp-bullets li {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: var(--ink);
+        padding-left: 20px;
+        position: relative;
+      }
+      .exp-bullets li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* ── PROJECTS ── */
+      .projects {
+        padding: 120px 48px;
+      }
+      .projects-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        margin-bottom: 80px;
+        align-items: end;
+      }
+      .projects-intro {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+      .project-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        background: var(--rule);
+      }
+      .project-card {
+        background: var(--paper);
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.3s;
+      }
+      .project-card:hover {
+        background: var(--cream);
+      }
+      .project-card:hover .project-arrow {
+        transform: translate(4px, -4px);
+      }
+      .project-num {
+        font-family: "Playfair Display", serif;
+        font-size: 4rem;
+        color: var(--cream);
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: -10px;
+      }
+      .project-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        margin-top: 8px;
+      }
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 20px;
+      }
+      .tag {
+        font-size: 0.55rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border: 1px solid var(--rule);
+        color: var(--muted);
+      }
+      .project-desc {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .project-arrow {
+        position: absolute;
+        top: 32px;
+        right: 32px;
+        font-size: 1.2rem;
+        color: var(--accent);
+        transition: transform 0.25s;
+      }
+
+      /* ── CONTACT ── */
+      .contact {
+        padding: 120px 48px;
+        background: var(--ink);
+        color: var(--paper);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .contact .section-label {
+        color: #b85c2c;
+      }
+      .contact .section-title {
+        color: var(--paper);
+      }
+      .contact-tagline {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        line-height: 1.65;
+        color: #a89f93;
+        margin-top: 24px;
+      }
+      .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .contact-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 0;
+        border-bottom: 1px solid #2a2822;
+        text-decoration: none;
+        color: var(--paper);
+        transition: color 0.2s;
+      }
+      .contact-link:hover {
+        color: var(--accent);
+      }
+      .contact-link:first-child {
+        border-top: 1px solid #2a2822;
+      }
+      .cl-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #6b6459;
+      }
+      .cl-value {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+      }
+      .cl-arrow {
+        font-size: 0.9rem;
+        opacity: 0.4;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--ink);
+        border-top: 1px solid #1e1c18;
+        padding: 32px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      footer .f-name {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: #4a4540;
+      }
+      footer .f-copy {
+        font-size: 0.55rem;
+        letter-spacing: 0.14em;
+        color: #3a3530;
+      }
+      .social-row {
+        display: flex;
+        gap: 20px;
+      }
+      .social-row a {
+        font-size: 0.55rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #4a4540;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .social-row a:hover {
+        color: var(--accent);
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        nav {
+          padding: 20px 24px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          min-height: auto;
+          padding-top: 100px;
+        }
+        .hero::after {
+          display: none;
+        }
+        .hero-left {
+          padding: 40px 24px 0;
+          justify-content: flex-start;
+        }
+        .hero-right {
+          padding: 40px 24px 80px;
+        }
+        .hero-graphic .big-number {
+          font-size: 7rem;
+          right: 0;
+          top: -20px;
+        }
+        .about {
+          grid-template-columns: 1fr;
+          padding: 80px 24px;
+          gap: 40px;
+        }
+        .about-left {
+          position: static;
+        }
+        .experience {
+          padding: 60px 24px;
+        }
+        .exp-entry {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .projects {
+          padding: 80px 24px;
+        }
+        .projects-header {
+          grid-template-columns: 1fr;
+        }
+        .project-grid {
+          grid-template-columns: 1fr;
+        }
+        .contact {
+          grid-template-columns: 1fr;
+          padding: 80px 24px;
+          gap: 48px;
+        }
+        footer {
+          padding: 24px;
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="nav-logo">A·D</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-tag">Data Analyst · Business Intelligence</div>
+        <h1 class="hero-name">Aman<br /><em>Debnath</em></h1>
+        <p class="hero-desc">
+          Turning raw data into decisions that matter — through clean pipelines,
+          sharp dashboards, and honest insight.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-filled">View Work</a>
+          <a href="#contact" class="btn">Get in Touch</a>
+        </div>
+        <div class="scroll-line">Scroll</div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-graphic">
+          <div class="big-number">01</div>
+          <div class="hero-stats">
+            <div class="stat-row">
+              <div class="stat-num">3+</div>
+              <div class="stat-label">Featured<br />Projects</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-num">
+                770<span style="font-size: 1.2rem">+</span>
+              </div>
+              <div class="stat-label">F1 Drivers<br />Analysed</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-num">3.9k</div>
+              <div class="stat-label">Purchases<br />Modelled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+      <div class="about-left reveal">
+        <div class="section-label">About</div>
+        <h2 class="section-title">
+          The<br /><em
+            style="
+              font-style: italic;
+              font-family: &quot;Playfair Display&quot;, serif;
+            "
+            >analyst</em
+          ><br />behind<br />the data
+        </h2>
+        <hr class="rule" />
+        <p
+          style="
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            line-height: 1.8;
+          "
+        >
+          Delhi / Kolkata, India<br />
+          +91-9051896200<br />
+          amandebnath66@gmail.com
+        </p>
+      </div>
+      <div class="about-right reveal">
+        <p class="about-text">
+          I'm a <strong>Data &amp; Business Intelligence Analyst</strong> with a
+          background in Mechanical Engineering — which means I approach data
+          problems like an engineer: systematically, with an eye for process and
+          a respect for accuracy.
+        </p>
+        <p class="about-text">
+          At <strong>MM Aqua Technologies</strong>, I built reporting
+          infrastructure that gave leadership the clarity they needed to move
+          faster. Now I'm channeling that same energy into end-to-end analytical
+          projects — from raw ingestion to polished, interactive dashboards.
+        </p>
+        <p class="about-text">
+          My toolkit is SQL-first, Python-supported, and always Power
+          BI-finished. I care about pipelines that don't break, metrics that
+          actually mean something, and presentations that don't require a
+          decoder ring.
+        </p>
+        <div class="skills-grid">
+          <div class="skill-item">
+            <div class="skill-cat">Languages</div>
+            SQL · Python · DAX
+          </div>
+          <div class="skill-item">
+            <div class="skill-cat">Libraries</div>
+            Pandas · NumPy · Plotly · Seaborn
+          </div>
+          <div class="skill-item">
+            <div class="skill-cat">Databases</div>
+            SQL Server · PostgreSQL · MySQL
+          </div>
+          <div class="skill-item">
+            <div class="skill-cat">Visualisation</div>
+            Power BI · Excel · Matplotlib
+          </div>
+          <div class="skill-item">
+            <div class="skill-cat">Concepts</div>
+            KPIs · EDA · Data Cleaning
+          </div>
+          <div class="skill-item">
+            <div class="skill-cat">Tools</div>
+            PowerShell · DBA Tools · Git
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="experience" id="experience">
+      <div class="exp-header reveal">
+        <div>
+          <div class="section-label">Experience</div>
+          <h2 class="section-title">
+            Where I've<br /><em
+              style="
+                font-style: italic;
+                font-family: &quot;Playfair Display&quot;, serif;
+              "
+              >applied</em
+            >
+            it
+          </h2>
+        </div>
+      </div>
+
+      <div class="exp-entry reveal">
+        <div class="exp-meta">
+          <div class="company">MM Aqua<br />Technologies</div>
+          <div class="role">Graduate Engineer Trainee</div>
+          <div class="period">Feb 2024 — Jul 2025<br />Kolkata, India</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>
+            Built and maintained Excel-based reporting systems to track
+            operational metrics and sales data, significantly reducing reporting
+            turnaround time.
+          </li>
+          <li>
+            Defined and monitored KPIs adopted by leadership to track
+            operational outcomes and surface emerging trends.
+          </li>
+          <li>
+            Identified recurring data patterns that exposed process
+            inefficiencies, directly informing corrective action.
+          </li>
+          <li>
+            Presented periodic analytical insights to cross-functional
+            stakeholders, shaping resource allocation decisions.
+          </li>
+        </ul>
+      </div>
+
+      <div
+        class="exp-entry reveal"
+        style="border-bottom: 1px solid var(--rule)"
+      >
+        <div class="exp-meta">
+          <div class="company">Education</div>
+          <div class="role">B.Tech · Mechanical Engineering</div>
+          <div class="period">MAKAUT, Kolkata<br />2021 — 2024 · GPA 7.55</div>
+        </div>
+        <ul class="exp-bullets">
+          <li>
+            Bachelor of Technology in Mechanical Engineering, providing a
+            rigorous analytical and systems-thinking foundation.
+          </li>
+          <li>
+            Diploma in Engineering (Mechanical) from WBSCTE, 2018–2021 · GPA
+            8.20
+          </li>
+          <li>
+            Currently completing the
+            <em>Business Intelligence Analyst Career Path</em> on Codecademy
+            (2025–2026).
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="projects" id="projects">
+      <div class="projects-header">
+        <div class="reveal">
+          <div class="section-label">Selected Work</div>
+          <h2 class="section-title">
+            Projects that<br /><em
+              style="
+                font-style: italic;
+                font-family: &quot;Playfair Display&quot;, serif;
+              "
+              >speak</em
+            >
+            for themselves
+          </h2>
+        </div>
+        <p class="projects-intro reveal">
+          End-to-end analytical builds — from data pipeline to insight-ready
+          dashboard. Each project is a full lifecycle exercise in real-world
+          analysis.
+        </p>
+      </div>
+
+      <div class="project-grid">
+        <div class="project-card reveal">
+          <span class="project-arrow">↗</span>
+          <div class="project-num">01</div>
+          <h3 class="project-title">Formula 1 Champions Dashboard</h3>
+          <div class="project-tags">
+            <span class="tag">SQL Server</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">PowerShell</span>
+            <span class="tag">Jan 2026</span>
+          </div>
+          <p class="project-desc">
+            Automated a Kaggle-to-SQL Server ingestion pipeline via PowerShell
+            (DBA Tools), built a robust staging layer with SQL Views using
+            TRY_CAST and COALESCE, and optimised query performance with
+            Clustered Columnstore Indexes. The resulting Power BI dashboard
+            covers 770+ drivers and 300+ teams with dynamic slicers and trend
+            visualisations.
+          </p>
+        </div>
+
+        <div class="project-card reveal">
+          <span class="project-arrow">↗</span>
+          <div class="project-num">02</div>
+          <h3 class="project-title">
+            E-Commerce Funnel Analysis &amp; Dashboard
+          </h3>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">Plotly</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Feb 2026</span>
+          </div>
+          <p class="project-desc">
+            Analysed 30 days of session data to quantify conversion efficiency
+            across four funnel stages. Built an interactive 4-pane Plotly
+            dashboard to pinpoint friction points and correlate session duration
+            with revenue. Extended into a multi-page Power BI report with
+            DAX-driven KPIs on unique sessions and purchase trends.
+          </p>
+        </div>
+
+        <div class="project-card reveal">
+          <span class="project-arrow">↗</span>
+          <div class="project-num">03</div>
+          <h3 class="project-title">Customer Shopping Behaviour Analysis</h3>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Feb 2026</span>
+          </div>
+          <p class="project-desc">
+            Cleaned a 3,900-purchase dataset using category-specific median
+            imputation and feature engineering. Conducted multi-dimensional SQL
+            analysis in PostgreSQL to segment customers as Loyal, Returning, or
+            New, and identified high-value revenue drivers across gender and
+            age. The dashboard surfaced a 27% subscription conversion rate and a
+            $59.76 average purchase amount.
+          </p>
+        </div>
+
+        <div
+          class="project-card reveal"
+          style="
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            min-height: 280px;
+          "
+        >
+          <div
+            style="
+              font-family: &quot;Playfair Display&quot;, serif;
+              font-size: 1.1rem;
+              color: var(--muted);
+              margin-bottom: 16px;
+              font-style: italic;
+            "
+          >
+            More on GitHub
+          </div>
+          <a
+            href="https://github.com/amandebnath"
+            target="_blank"
+            class="btn"
+            style="font-size: 0.58rem"
+            >View Repository →</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+      <div class="reveal">
+        <div class="section-label">Let's Connect</div>
+        <h2 class="section-title" style="color: var(--paper)">
+          Open to<br /><em
+            style="
+              font-style: italic;
+              font-family: &quot;Playfair Display&quot;, serif;
+              color: var(--accent);
+            "
+            >new</em
+          ><br />opportunities
+        </h2>
+        <p class="contact-tagline">
+          Whether it's a data analyst role, a freelance project, or a
+          conversation about dashboards that don't suck — I'm listening.
+        </p>
+      </div>
+
+      <div class="contact-links reveal">
+        <a href="mailto:amandebnath66@gmail.com" class="contact-link">
+          <div>
+            <div class="cl-label">Email</div>
+            <div class="cl-value">amandebnath66@gmail.com</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/aman-debnath-665528161/"
+          target="_blank"
+          class="contact-link"
+        >
+          <div>
+            <div class="cl-label">LinkedIn</div>
+            <div class="cl-value">aman-debnath-665528161</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a
+          href="https://github.com/amandebnath"
+          target="_blank"
+          class="contact-link"
+        >
+          <div>
+            <div class="cl-label">GitHub</div>
+            <div class="cl-value">amandebnath</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://x.com/aman_fsdev" target="_blank" class="contact-link">
+          <div>
+            <div class="cl-label">X / Twitter</div>
+            <div class="cl-value">@aman_fsdev</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a
+          href="https://bsky.app/profile/amanfsdev.bsky.social"
+          target="_blank"
+          class="contact-link"
+        >
+          <div>
+            <div class="cl-label">Bluesky</div>
+            <div class="cl-value">amanfsdev.bsky.social</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a
+          href="https://www.instagram.com/just.aman.19"
+          target="_blank"
+          class="contact-link"
+        >
+          <div>
+            <div class="cl-label">Instagram</div>
+            <div class="cl-value">@just.aman.19</div>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <div class="contact-link" style="cursor: default">
+          <div>
+            <div class="cl-label">Phone</div>
+            <div class="cl-value">+91 905 189 6200</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="f-name">Aman Debnath</div>
+      <div class="social-row">
+        <a href="https://github.com/amandebnath" target="_blank">GitHub</a>
+        <a
+          href="https://www.linkedin.com/in/aman-debnath-665528161/"
+          target="_blank"
+          >LinkedIn</a
+        >
+        <a href="https://x.com/aman_fsdev" target="_blank">X</a>
+        <a href="https://bsky.app/profile/amanfsdev.bsky.social" target="_blank"
+          >Bluesky</a
+        >
+      </div>
+      <div class="f-copy">© 2026 · Kolkata, India</div>
+    </footer>
+
+    <script>
+      // Custom cursor
+      const cursor = document.getElementById("cursor");
+      const ring = document.getElementById("cursorRing");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        cursor.style.left = mx - 4 + "px";
+        cursor.style.top = my - 4 + "px";
+      });
+
+      function animateRing() {
+        rx += (mx - rx - 16) * 0.12;
+        ry += (my - ry - 16) * 0.12;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      document.querySelectorAll("a, button").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          cursor.style.transform = "scale(2.5)";
+          ring.style.transform = "scale(1.5)";
+        });
+        el.addEventListener("mouseleave", () => {
+          cursor.style.transform = "scale(1)";
+          ring.style.transform = "scale(1)";
+        });
+      });
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll(".reveal");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add("visible"), 80);
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      reveals.forEach((r) => io.observe(r));
+    </script>
+  </body>
+</html>
